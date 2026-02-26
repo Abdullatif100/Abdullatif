@@ -1,0 +1,144 @@
+/* Report Waste Page */
+.report-waste-container {
+  min-height: calc(100vh - 72px);
+  padding: 2rem 1.25rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.report-waste-box {
+  background: var(--bg-card);
+  padding: 2rem;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  border: 1px solid #eef2f7;
+  width: 100%;
+  max-width: 680px;
+}
+
+.report-waste-box h2 {
+  text-align: center;
+  color: var(--text-primary);
+  margin-bottom: 0.45rem;
+  font-size: 1.8rem;
+}
+
+.report-waste-box .subtitle {
+  text-align: center;
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
+  font-size: 0.95rem;
+}
+
+.report-waste-box .form-group {
+  margin-bottom: 1.5rem;
+}
+
+.report-waste-box .form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.report-waste-box .form-group input,
+.report-waste-box .form-group select,
+.report-waste-box .form-group textarea {
+  width: 100%;
+  padding: 0.8rem 0.9rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
+  font-family: inherit;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  box-sizing: border-box;
+}
+
+.report-waste-box .form-group input:focus,
+.report-waste-box .form-group select:focus,
+.report-waste-box .form-group textarea:focus {
+  outline: none;
+  border-color: var(--brand-500);
+  box-shadow: var(--focus);
+}
+
+.report-waste-box .form-group textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.report-waste-box .form-group small {
+  display: block;
+  margin-top: 0.5rem;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.image-preview {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.image-preview img {
+  max-width: 100%;
+  max-height: 300px;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sm);
+}
+
+.error-message {
+  padding: 0.875rem 1rem;
+  background: var(--danger-100);
+  color: var(--danger-700);
+  border: 1px solid #f9caca;
+  border-radius: var(--radius-sm);
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.success-message {
+  padding: 0.875rem 1rem;
+  background: var(--success-100);
+  color: var(--success-700);
+  border: 1px solid #bde8cb;
+  border-radius: var(--radius-sm);
+  margin-bottom: 1rem;
+  text-align: center;
+  font-weight: 600;
+}
+
+.btn-submit {
+  width: 100%;
+  padding: 0.875rem;
+  background: linear-gradient(135deg, var(--brand-500) 0%, var(--brand-600) 100%);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+  margin-top: 1rem;
+}
+
+.btn-submit:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(39, 174, 96, 0.28);
+}
+
+.btn-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@media (max-width: 480px) {
+  .report-waste-box {
+    padding: 1.5rem;
+  }
+
+  .report-waste-box h2 {
+    font-size: 1.5rem;
+  }
+}
