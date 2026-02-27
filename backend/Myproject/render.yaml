@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: waste-management-backend
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt && python manage.py migrate && python manage.py collectstatic --noinput
+    startCommand: gunicorn Myproject.wsgi:application
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: waste-management-db
+          property: connectionString
+
+databases:
+  - name: waste-management-db
+    plan: free
+    databaseName: wastedb
+    user: wastedb_user
