@@ -17,7 +17,7 @@ const formatErrorValue = (value) => {
 };
 
 const formatApiError = (errorData) => {
-  if (!errorData) return 'Registration failed';
+  if (!errorData) return '';
   if (typeof errorData === 'string') return errorData;
 
   if (typeof errorData === 'object') {
@@ -28,10 +28,10 @@ const formatApiError = (errorData) => {
       return `${key}: ${parsedValue}`;
     }).filter(Boolean);
 
-    return messages.join(' | ') || 'Registration failed';
+    return messages.join(' | ');
   }
 
-  return 'Registration failed';
+  return '';
 };
 
 const Register = () => {
@@ -93,7 +93,22 @@ const Register = () => {
       }, 2000); // Redirect after 2 seconds
     } catch (err) {
       console.error('Registration error:', err);
-      const errorMessage = formatApiError(err.response?.data) || err.message || 'Registration failed. Please try again.';
+      const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || '/api';
+      const statusCode = err.response?.status;
+
+      let errorMessage = formatApiError(err.response?.data);
+      if (!errorMessage) {
+        if (err.code === 'ECONNABORTED') {
+          errorMessage = 'Server imechelewa kujibu. Jaribu tena baada ya muda kidogo.';
+        } else if (!err.response) {
+          errorMessage = `Imeshindikana kuifikia server (${apiBaseUrl}). Hakikisha backend ipo live na CORS imeruhusu domain ya Vercel.`;
+        } else if (statusCode) {
+          errorMessage = `Registration failed (HTTP ${statusCode}).`;
+        } else {
+          errorMessage = err.message || 'Registration failed. Please try again.';
+        }
+      }
+
       setError(errorMessage);
     } finally {
       setLoading(false);

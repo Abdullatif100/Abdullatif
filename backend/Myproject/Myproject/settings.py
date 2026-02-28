@@ -118,13 +118,21 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
 # CORS / CSRF
-default_frontend_origin = os.environ.get("FRONTEND_ORIGIN", "https://abdullatif-ymyj.vercel.app")
+default_frontend_origins = [
+    "https://abdullatif-ymyj.vercel.app",
+    "https://abdullatif-1v8l.vercel.app",
+]
+
+frontend_origin_env = os.environ.get("FRONTEND_ORIGIN")
+if frontend_origin_env and frontend_origin_env not in default_frontend_origins:
+    default_frontend_origins.append(frontend_origin_env)
+
 default_allowed_origins = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
     "http://localhost:5174",
     "http://127.0.0.1:5174",
-    default_frontend_origin,
+    *default_frontend_origins,
 ]
 
 CORS_ALLOW_ALL_ORIGINS = os.environ.get("CORS_ALLOW_ALL_ORIGINS", "False").lower() == "true"

@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
+from django.db import IntegrityError
 from .models import Userprofile
 
 class UserSerializer(serializers.ModelSerializer):
@@ -31,13 +32,21 @@ class RegisterSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Passwords do not match.")
         if data.get('role') not in ['citizen', 'officer', 'admin']:
             raise serializers.ValidationError("Invalid role.")
+        if User.objects.filter(username__iexact=data['username']).exists():
+            raise serializers.ValidationError({'username': 'Username already exists.'})
+        email = data.get('email', '').strip()
+        if email and User.objects.filter(email__iexact=email).exists():
+            raise serializers.ValidationError({'email': 'Email already exists.'})
         return data
     
     def create(self, validated_data):
         validated_data.pop('password2')
         phone_number = validated_data.pop('phone_number', '')
         role = validated_data.pop('role', 'citizen')
-        user = User.objects.create_user(**validated_data)
+        try:
+            user = User.objects.create_user(**validated_data)
+        except IntegrityError:
+            raise serializers.ValidationError({'username': 'Username already exists.'})
         Userprofile.objects.create(user=user, phone_number=phone_number, role=role)
         return user
 
