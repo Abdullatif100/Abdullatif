@@ -9,8 +9,8 @@ const Home = () => {
   return (
     <div className="home-container">
       <div className="hero-section">
-        <h1>Welcome to Waste Management System</h1>
-        <p>Help keep our community clean and healthy</p>
+        <h1>Integrated Waste Management Issue Reporting System</h1>
+        <p>Report, track, and resolve sanitation issues with faster community-government coordination.</p>
         
         {isAuthenticated ? (
           <div className="hero-buttons">
@@ -75,3 +75,4 @@ const Home = () => {
 };
 
 export default Home;
+
