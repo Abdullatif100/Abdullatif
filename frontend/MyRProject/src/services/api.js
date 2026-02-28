@@ -3,6 +3,7 @@ import axios from 'axios';
 // Use Vite proxy by default in development to avoid hard dependency on localhost URL.
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';
 const API_TIMEOUT_MS = Number(import.meta.env.VITE_API_TIMEOUT_MS) || 15000;
+const API_WITH_CREDENTIALS = import.meta.env.VITE_API_WITH_CREDENTIALS === 'true';
 
 console.log('Using API base URL:', API_BASE_URL);
 
@@ -13,7 +14,7 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  withCredentials: true, // For session authentication
+  withCredentials: API_WITH_CREDENTIALS,
 });
 
 // Function to get CSRF token

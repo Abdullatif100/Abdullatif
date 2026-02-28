@@ -1,8 +1,38 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
 import { userAPI } from '../services/api';
 import '../styles/Auth.css';
+
+const formatErrorValue = (value) => {
+  if (Array.isArray(value)) {
+    return value.map(formatErrorValue).filter(Boolean).join(', ');
+  }
+  if (value && typeof value === 'object') {
+    if (typeof value.detail === 'string') return value.detail;
+    if (typeof value.message === 'string') return value.message;
+    return Object.values(value).map(formatErrorValue).filter(Boolean).join(', ');
+  }
+  if (value === null || value === undefined) return '';
+  return String(value);
+};
+
+const formatApiError = (errorData) => {
+  if (!errorData) return 'Registration failed';
+  if (typeof errorData === 'string') return errorData;
+
+  if (typeof errorData === 'object') {
+    const messages = Object.entries(errorData).map(([key, value]) => {
+      const parsedValue = formatErrorValue(value);
+      if (!parsedValue) return '';
+      if (key === 'detail' || key === 'non_field_errors') return parsedValue;
+      return `${key}: ${parsedValue}`;
+    }).filter(Boolean);
+
+    return messages.join(' | ') || 'Registration failed';
+  }
+
+  return 'Registration failed';
+};
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -19,7 +49,6 @@ const Register = () => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState('');
   const navigate = useNavigate();
-  const { register } = useAuth();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -57,8 +86,6 @@ const Register = () => {
         role: formData.role,
       });
 
-      const data = response.data;
-      
       // Show success message and redirect to login
       setSuccess('Registration successful! Please login with your credentials.');
       setTimeout(() => {
@@ -66,25 +93,8 @@ const Register = () => {
       }, 2000); // Redirect after 2 seconds
     } catch (err) {
       console.error('Registration error:', err);
-      if (err.response && err.response.data) {
-        const errorData = err.response.data;
-        // Extract meaningful error message
-        if (typeof errorData === 'object') {
-          const messages = [];
-          for (const [key, value] of Object.entries(errorData)) {
-            if (Array.isArray(value)) {
-              messages.push(`${key}: ${value[0]}`);
-            } else {
-              messages.push(`${key}: ${value}`);
-            }
-          }
-          setError(messages.join(', ') || 'Registration failed');
-        } else {
-          setError(errorData.message || 'Registration failed');
-        }
-      } else {
-        setError(err.message || 'Registration failed. Please try again.');
-      }
+      const errorMessage = formatApiError(err.response?.data) || err.message || 'Registration failed. Please try again.';
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }

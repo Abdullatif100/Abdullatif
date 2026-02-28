@@ -17,7 +17,7 @@ const Navigation = () => {
     <nav className="navbar">
       <div className="nav-container">
         <Link to="/" className="nav-logo">
-          <span className="logo-icon">♻️</span> Waste Management
+          <span className="logo-icon">WM</span> Waste Management
         </Link>
 
         <ul className="nav-menu">
