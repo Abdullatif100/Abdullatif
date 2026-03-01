@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from django.db import IntegrityError
+from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from .models import Userprofile
@@ -153,10 +154,18 @@ def login_api(request):
     """User login endpoint"""
     serializer = LoginSerializer(data=request.data)
     if serializer.is_valid():
-        username = serializer.validated_data['username']
+        username = serializer.validated_data['username'].strip()
         password = serializer.validated_data['password']
-        
+
+        # Support login by username (case-insensitive) or email.
         user = authenticate(username=username, password=password)
+        if user is None and username:
+            matched_user = User.objects.filter(
+                Q(username__iexact=username) | Q(email__iexact=username)
+            ).first()
+            if matched_user:
+                user = authenticate(username=matched_user.username, password=password)
+
         if user is not None:
             login(request, user)
             # Superuser/staff should always behave as admin in API + frontend.
